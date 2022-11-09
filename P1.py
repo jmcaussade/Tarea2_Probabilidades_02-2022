@@ -1,14 +1,16 @@
 ## Link Collab: https://colab.research.google.com/drive/1SF3p2nz389SQnAgoKO5os2ZjlexW_O16?authuser=2#scrollTo=seR4-BXXb1f_
-## Extraido de google collab desde linea 3 hasta linea 33 ###
+## Extraido de google collab desde linea 3  ###
 ## Loading the required libraries:
 import numpy as np
 import pandas as pd 
 import matplotlib.pyplot as plt
 #%matplotlib inline 
-import datetime as dt
-import calendar
 import warnings
+#import sqldf
 warnings.filterwarnings('ignore')
+
+from pandasql import sqldf
+pysqldf = lambda q: sqldf(q, globals())
 
 ## Reading the data:
 order_items = pd.read_csv('olist_order_items_dataset.csv', on_bad_lines='skip')  ## Unclassified orders dataset
@@ -32,5 +34,12 @@ order_products['GMV'] = order_products['price']*order_products['quantity']
 dataset = order_products
 #### Fin extraccion Google Collab ###
 
-print(dataset)
+## Renaming column
+dataset.rename(columns ={"product_category_name_english" : "product_category"}, inplace = True)
 
+#print(dataset)
+
+#q1 = f"""SELECT * FROM dataset WHERE product_category_name_english = "Top 1" """
+q1 = f"""SELECT * FROM dataset WHERE product_category = "auto" """
+n1 = pysqldf(q1)
+print(n1) 
