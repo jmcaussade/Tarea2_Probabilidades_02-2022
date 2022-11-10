@@ -1,13 +1,14 @@
-## Link Collab: https://colab.research.google.com/drive/1SF3p2nz389SQnAgoKO5os2ZjlexW_O16?authuser=2#scrollTo=seR4-BXXb1f_
-## Extraido de google collab desde linea 3  ###
+## LINKs códigos:
+            ##Link Collab: https://colab.research.google.com/drive/1SF3p2nz389SQnAgoKO5os2ZjlexW_O16?authuser=2#scrollTo=seR4-BXXb1f_
+## Parte del código extraido de google collab
+
 ## Loading the required libraries:
 import numpy as np
 import pandas as pd 
 import matplotlib.pyplot as plt
-#%matplotlib inline 
-import warnings
-#import sqldf
-warnings.filterwarnings('ignore')
+import scipy.stats as st
+#import warnings
+#warnings.filterwarnings('ignore')
 
 from pandasql import sqldf
 pysqldf = lambda q: sqldf(q, globals())
@@ -37,9 +38,48 @@ dataset = order_products
 ## Renaming column
 dataset.rename(columns ={"product_category_name_english" : "product_category"}, inplace = True)
 
-#print(dataset)
+############## FUNCTIONS ###############
 
-#q1 = f"""SELECT * FROM dataset WHERE product_category_name_english = "Top 1" """
-q1 = f"""SELECT * FROM dataset WHERE product_category = "auto" """
+def STD(dataframe):
+    size = dataframe["quantity"].sum()
+    mean = dataframe["GMV"].sum()/size
+    SquareSum = 0
+    i = 0
+    while i<dataframe.shape[0]:
+        SquareSum+= (dataframe["GMV"][i] - mean)**2
+        i+=1
+    Division = SquareSum/size
+    std = Division**(1/2)
+    #print(size)
+    #print(mean)
+    #print(SquareSum)
+    #print(std)
+    list = [mean, std]
+    return list
+
+############## END FUNCTIONS ###########
+
+q1 = f"""SELECT product_category, SUM(quantity) as sum_quantity, SUM(GMV) as sum_GMV FROM dataset 
+GROUP BY product_category
+ORDER BY sum_GMV DESC 
+LIMIT 1 """
 n1 = pysqldf(q1)
-print(n1) 
+#print(n1, "\n")
+
+category = n1["product_category"][0]
+print(category)
+q2 = f"""SELECT product_category, quantity, price, GMV FROM dataset WHERE product_category = "{category}" 
+ORDER BY price DESC"""
+n2 = pysqldf(q2)
+print(n2, "\n")
+
+### n = 25
+
+values25 = STD(n2) 
+
+interval25 = st.t.interval(alpha=0.95,
+              df=1,
+              loc= values25[0], 
+              scale=values25[1])
+
+print(interval25)
