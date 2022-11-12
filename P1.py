@@ -71,7 +71,7 @@ print(category)
 q2 = f"""SELECT product_category, quantity, price, GMV FROM dataset WHERE product_category = "{category}" 
 ORDER BY price DESC"""
 n2 = pysqldf(q2)
-print(n2, "\n")
+#print(n2, "\n")
 
 ### n = 25
 
@@ -83,3 +83,35 @@ interval25 = st.t.interval(alpha=0.95,
               scale=values25[1])
 
 print(interval25)
+
+
+Sample25 = n2["GMV"].sample(n = 25)
+#print(Sample25)
+Interval25t = st.t.interval(0.95, (len(Sample25) - 1),np.mean(Sample25), st.sem(Sample25))
+print(Interval25t)
+
+###  SAMPLE N = 100 #####
+Sample100 = n2["GMV"].sample(n = 100)
+#print(Sample100)
+Interval100 = st.norm.interval(0.95, np.mean(Sample100), st.sem(Sample100))
+print(Interval100)
+
+
+###  SAMPLE N = 1000 #####
+Sample1000 = n2["GMV"].sample(n = 1000)
+#print(Sample100)
+Interval1000 = st.norm.interval(0.95, np.mean(Sample1000), st.sem(Sample1000))
+print(Interval1000)
+
+
+###  SAMPLE N = 2000 #####
+Sample2000 = n2["GMV"].sample(n = 2000)
+#print(Sample100)
+Interval2000 = st.norm.interval(0.95, np.mean(Sample2000), st.sem(Sample2000))
+print(Interval2000)
+
+
+
+
+
+
