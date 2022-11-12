@@ -44,10 +44,12 @@ q1 = f"""SELECT seller_state, freight_value FROM dataset
 WHERE seller_state = "SP" 
 """
 n1 = pysqldf(q1)
-print(n1, "\n")
+#print(n1, "\n")
 
 SPMean= n1["freight_value"].mean()
 print("SPMean:", SPMean)
+
+SampleSP = n1["freight_value"].sample(frac= .20)
 
 #RJ
 q2 = f"""SELECT seller_state, freight_value FROM dataset
@@ -59,6 +61,8 @@ n2 = pysqldf(q2)
 RJMean= n2["freight_value"].mean()
 print("RJMean:", RJMean)
 
+SampleRJ = n2["freight_value"].sample(frac= .20)
+
 # MG
 q3 = f"""SELECT seller_state, freight_value FROM dataset
 WHERE seller_state = "MG" 
@@ -68,3 +72,17 @@ n3 = pysqldf(q3)
 
 MGMean= n3["freight_value"].mean()
 print("MGMean:", MGMean)
+
+SampleMG = n3["freight_value"].sample(frac= .20)
+
+## MAIN
+
+IntervalSP = st.norm.interval(0.95, np.mean(SampleSP), st.sem(SampleSP))
+print("IntervalSP", IntervalSP)
+
+IntervalRJ= st.norm.interval(0.95, np.mean(SampleRJ), st.sem(SampleRJ))
+print("IntervalRJ", IntervalRJ)
+
+IntervalMG= st.norm.interval(0.95, np.mean(SampleMG), st.sem(SampleMG))
+print("IntervalMG", IntervalMG)
+
