@@ -79,7 +79,9 @@ Sample25 = n2["GMV"].sample(n = 25)
 #print(Sample25)
 Interval25t = st.t.interval(0.95, (len(Sample25) - 1),np.mean(Sample25), st.sem(Sample25))
 print("\nIntervalo confianza n = 25")
+Ancho25 = Interval25t[1] - Interval25t[0]
 print(Interval25t)
+print("Ancho ", Ancho25)
 
 ###  SAMPLE N = 100 #####
 Sample100 = n2["GMV"].sample(n = 100)
@@ -87,6 +89,8 @@ Sample100 = n2["GMV"].sample(n = 100)
 Interval100 = st.norm.interval(0.95, np.mean(Sample100), st.sem(Sample100))
 print("\nIntervalo confianza n = 100")
 print(Interval100)
+Ancho100 = Interval100[1] - Interval100[0]
+print("Ancho ", Ancho100)
 
 
 ###  SAMPLE N = 1000 #####
@@ -94,7 +98,9 @@ Sample1000 = n2["GMV"].sample(n = 1000)
 #print(Sample100)
 Interval1000 = st.norm.interval(0.95, np.mean(Sample1000), st.sem(Sample1000))
 print("\nIntervalo confianza n = 1000")
-print(Interval1000, "\n")
+print(Interval1000)
+Ancho1000 = Interval1000[1] - Interval1000[0]
+print("Ancho ", Ancho1000, "\n")
 
 
 
