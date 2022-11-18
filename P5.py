@@ -27,8 +27,6 @@ def MeanDiff(array1, array2): ## array[mean, var, tamaño muestra]
     return IC
 
 
-
-
 ## Reading the data:
 order_items = pd.read_csv('olist_order_items_dataset.csv', on_bad_lines='skip')  ## Unclassified orders dataset
 seller=pd.read_csv('olist_sellers_dataset.csv', on_bad_lines='skip') ## Seller information
