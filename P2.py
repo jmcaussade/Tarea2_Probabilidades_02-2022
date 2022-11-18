@@ -42,15 +42,27 @@ dataset.rename(columns ={"product_category_name_english" : "product_category"}, 
 ## Main ###
 
 ## product category = sport_leisure
-q1 = f"""SELECT product_category, freight_value FROM dataset 
+q1 = f"""SELECT freight_value FROM dataset 
 WHERE product_category = "sports_leisure" """
 
 n1 = pysqldf(q1)
-print(n1, "\n")
+#print(n1, "\n")
 
 ## product category = watches_gifts
 q2 = f"""SELECT product_category, freight_value FROM dataset 
 WHERE product_category = "watches_gifts" """
 
 n2 = pysqldf(q2)
-print(n2, "\n")
+#print(n2, "\n")
+
+## Intervals
+
+## Sport leisure
+SportsIntevrval = st.norm.interval(0.95, np.mean(n1["freight_value"]), st.sem(n1["freight_value"]))
+print("\nIntervalo de confianza 95% Sports leisure freight_value")
+print(SportsIntevrval, "\n")
+
+## Watches gifts
+WatchesIntevrval = st.norm.interval(0.95, np.mean(n2["freight_value"]), st.sem(n2["freight_value"]))
+print("\nIntervalo de confianza 95% Watches gifts freight_value")
+print(WatchesIntevrval, "\n")
