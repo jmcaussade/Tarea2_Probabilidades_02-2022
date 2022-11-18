@@ -7,11 +7,27 @@ import numpy as np
 import pandas as pd 
 import matplotlib.pyplot as plt
 import scipy.stats as st
+import math
 #import warnings
 #warnings.filterwarnings('ignore')
 
 from pandasql import sqldf
 pysqldf = lambda q: sqldf(q, globals())
+
+## Functions ##
+def MeanDiff(array1, array2): ## array[mean, var, tamaño muestra]
+    z = 1.96
+    sub = array1[0] - array2[0]
+    sum = (array1[1]/array1[2] + array2[1]/array2[2])
+    Sroot = math.sqrt(sum)
+    timesZ = z*Sroot
+    resultleft = sub - timesZ
+    resultright = sub + timesZ
+    IC = "( ", resultleft, " ,", resultright, " )"
+    return IC
+
+
+
 
 ## Reading the data:
 order_items = pd.read_csv('olist_order_items_dataset.csv', on_bad_lines='skip')  ## Unclassified orders dataset
@@ -39,50 +55,63 @@ dataset = order_products
 dataset.rename(columns ={"product_category_name_english" : "product_category"}, inplace = True)
 
 ## SELECTING DATA
+
 # SP
 q1 = f"""SELECT seller_state, freight_value FROM dataset
 WHERE seller_state = "SP" 
 """
 n1 = pysqldf(q1)
-#print(n1, "\n")
 
 SPMean= n1["freight_value"].mean()
+SPVar= n1["freight_value"].var()
 print("SPMean:", SPMean)
 
 SampleSP = n1["freight_value"].sample(frac= .20)
+SPSampleMean = np.mean(SampleSP)
+print("SP Sample Mean: ", SPSampleMean)
 
 #RJ
 q2 = f"""SELECT seller_state, freight_value FROM dataset
 WHERE seller_state = "RJ" 
 """
 n2 = pysqldf(q2)
-#print(n2, "\n")
+
 
 RJMean= n2["freight_value"].mean()
+RJVar= n2["freight_value"].var()
 print("RJMean:", RJMean)
 
 SampleRJ = n2["freight_value"].sample(frac= .20)
+RJSampleMean = np.mean(SampleRJ)
+print("RJ Sample Mean: ", RJSampleMean)
 
 # MG
 q3 = f"""SELECT seller_state, freight_value FROM dataset
 WHERE seller_state = "MG" 
 """
 n3 = pysqldf(q3)
-#print(n3, "\n")
 
 MGMean= n3["freight_value"].mean()
+MGVar= n3["freight_value"].var()
 print("MGMean:", MGMean)
 
 SampleMG = n3["freight_value"].sample(frac= .20)
+MGSampleMean = np.mean(SampleMG)
+print("MG Sample Mean: ", MGSampleMean)
 
-## MAIN
 
-IntervalSP = st.norm.interval(0.95, np.mean(SampleSP), st.sem(SampleSP))
+## Part 1 Intervals ####
+
+IntervalSP = st.norm.interval(0.95, SPSampleMean, st.sem(SampleSP))
 print("IntervalSP", IntervalSP)
 
-IntervalRJ= st.norm.interval(0.95, np.mean(SampleRJ), st.sem(SampleRJ))
+IntervalRJ= st.norm.interval(0.95, RJSampleMean, st.sem(SampleRJ))
 print("IntervalRJ", IntervalRJ)
 
-IntervalMG= st.norm.interval(0.95, np.mean(SampleMG), st.sem(SampleMG))
+IntervalMG= st.norm.interval(0.95, MGSampleMean, st.sem(SampleMG))
 print("IntervalMG", IntervalMG)
+
+##### PART 2 Mean difference #####
+
+
 
