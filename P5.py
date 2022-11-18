@@ -23,7 +23,7 @@ def MeanDiff(array1, array2): ## array[mean, var, tamaño muestra]
     timesZ = z*Sroot
     resultleft = sub - timesZ
     resultright = sub + timesZ
-    IC = "( ", resultleft, " ,", resultright, " )"
+    IC = "( " + str(resultleft) + " ; " + str(resultright) + " )"
     return IC
 
 
@@ -65,10 +65,15 @@ n1 = pysqldf(q1)
 SPMean= n1["freight_value"].mean()
 SPVar= n1["freight_value"].var()
 print("SPMean:", SPMean)
+print("SPVar", SPVar)
 
 SampleSP = n1["freight_value"].sample(frac= .20)
 SPSampleMean = np.mean(SampleSP)
-print("SP Sample Mean: ", SPSampleMean)
+countSP = SampleSP.count()
+print("countSP", countSP)
+print("SP Sample Mean: ", SPSampleMean, "\n")
+
+SParray = [SPSampleMean, SPVar, countSP]
 
 #RJ
 q2 = f"""SELECT seller_state, freight_value FROM dataset
@@ -76,14 +81,19 @@ WHERE seller_state = "RJ"
 """
 n2 = pysqldf(q2)
 
-
 RJMean= n2["freight_value"].mean()
 RJVar= n2["freight_value"].var()
 print("RJMean:", RJMean)
+print("RJVar", RJVar)
+
 
 SampleRJ = n2["freight_value"].sample(frac= .20)
 RJSampleMean = np.mean(SampleRJ)
-print("RJ Sample Mean: ", RJSampleMean)
+countRJ = SampleRJ.count()
+print("countRJ", countRJ)
+print("RJ Sample Mean: ", RJSampleMean, "\n")
+
+RJarray = [RJSampleMean, RJVar, countRJ]
 
 # MG
 q3 = f"""SELECT seller_state, freight_value FROM dataset
@@ -94,10 +104,16 @@ n3 = pysqldf(q3)
 MGMean= n3["freight_value"].mean()
 MGVar= n3["freight_value"].var()
 print("MGMean:", MGMean)
+print("MGVar", MGVar)
+
 
 SampleMG = n3["freight_value"].sample(frac= .20)
 MGSampleMean = np.mean(SampleMG)
-print("MG Sample Mean: ", MGSampleMean)
+countMG = SampleMG.count()
+print("countMG", countMG)
+print("MG Sample Mean: ", MGSampleMean, "\n")
+
+MGarray = [MGSampleMean, MGVar, countMG]
 
 
 ## Part 1 Intervals ####
@@ -113,5 +129,9 @@ print("IntervalMG", IntervalMG)
 
 ##### PART 2 Mean difference #####
 
+RJDiff = MeanDiff(SParray, RJarray)
+print("\nRJDiff", RJDiff)
+MGDiff = MeanDiff(SParray, MGarray)
+print("\nMGDiff", MGDiff, "\n")
 
 
