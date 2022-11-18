@@ -55,14 +55,32 @@ WHERE product_category = "watches_gifts" """
 n2 = pysqldf(q2)
 #print(n2, "\n")
 
-## Intervals
+##### Intervals #####
 
 ## Sport leisure
 SportsIntevrval = st.norm.interval(0.95, np.mean(n1["freight_value"]), st.sem(n1["freight_value"]))
-print("\nIntervalo de confianza 95% Sports leisure freight_value")
+print("\nIntervalo de confianza 95% para Sports leisure freight_value")
 print(SportsIntevrval, "\n")
 
 ## Watches gifts
 WatchesIntevrval = st.norm.interval(0.95, np.mean(n2["freight_value"]), st.sem(n2["freight_value"]))
-print("\nIntervalo de confianza 95% Watches gifts freight_value")
+print("\nIntervalo de confianza 95% para Watches gifts freight_value")
 print(WatchesIntevrval, "\n")
+
+## Calculo Ancho intervalos y porcentajes
+
+### Sports Leisure
+Sfin = SportsIntevrval[1]
+Sinicio = SportsIntevrval[0]
+Sancho = Sfin - Sinicio
+print("\nAncho Sports leisure = ", Sancho)
+
+### Watches gifts
+Wfin = WatchesIntevrval[1]
+Winicio = WatchesIntevrval[0]
+Wancho = Wfin - Winicio
+print("\nAncho Watches gift = ", Wancho)
+
+Percentage = (Sancho*100)/Wancho
+
+print("\npercentage = ", Percentage, "% \n")
