@@ -53,7 +53,7 @@ dataset = order_products
 dataset.rename(columns ={"product_category_name_english" : "product_category"}, inplace = True)
 
 ## SELECTING DATA
-
+print("\n")
 # SP
 q1 = f"""SELECT seller_state, freight_value FROM dataset
 WHERE seller_state = "SP" 
